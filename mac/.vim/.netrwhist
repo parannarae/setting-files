@@ -1,8 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
-let g:netrw_dirhist_1='/Users/seokhwan/workspace/okNameTest'
-let g:netrw_dirhist_2='/Users/seokhwan/.vim/colors'
-let g:netrw_dirhist_3='/Users/seokhwan/.gitkraken'
-let g:netrw_dirhist_4='/Users/seokhwan/github/peoplefund/.git'
-let g:netrw_dirhist_5='/Users/seokhwan/.jupyter'
-let g:netrw_dirhist_6='/Users/seokhwan/linux_terminal_settings'
