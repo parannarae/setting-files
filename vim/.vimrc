@@ -41,4 +41,5 @@ endif
 set autoindent "auto indentation
 set cindent "autoindent for C programming
 set smartindent
+set paste
 
