@@ -40,6 +40,9 @@ alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
 
+# Set Git language to English
+alias git='LC_ALL=en_US.UTF-8 git'
+
 # prompt
 export PS1="\[\e[32;1m\]\u@\h:\W$ \[\e[m\]"
 
