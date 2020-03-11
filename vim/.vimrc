@@ -25,6 +25,7 @@ set sc "show the command
 "set number "show line number
 
 set sw=4 "shiftwidth
+set ts=4 "tabstop
 set sts=4 "softtabstop
 set textwidth=80 "Automatic new line character
 set expandtab "use space instead of tab
