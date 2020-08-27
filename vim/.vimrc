@@ -23,6 +23,7 @@ set sol "start of the line
 set ru "cursor
 set sc "show the command
 "set number "show line number
+set ruler "show column number
 
 set sw=4 "shiftwidth
 set ts=4 "tabstop
@@ -42,5 +43,5 @@ endif
 set autoindent "auto indentation
 set cindent "autoindent for C programming
 set smartindent
-set paste
-
+"set paste "not reconmanded to set globally
+" reference: https://superuser.com/questions/437730/always-use-set-paste-is-it-a-good-idea
