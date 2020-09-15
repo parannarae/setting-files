@@ -13,10 +13,16 @@ setopt HIST_FIND_NO_DUPS
 setopt HIST_VERIFY
 
 # Initiating auto complete
+# if it complaints about insecurity, run compaudit and change writeability only
+# to root
 autoload -Uz compinit && compinit
 
+# token movement in iterm
+bindkey "\e[1;5D" backward-word
+bindkey "\e[1;5C" forward-word
+
 # Color prompt
-PROMPT='%B%F{green}%2/ %b%# %F{grey} '
+PROMPT='%F{green}%n>%B%2/ %b%# %F{grey} '
 
 # coloring
 # ls coloring
