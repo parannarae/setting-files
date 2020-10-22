@@ -22,7 +22,7 @@ bindkey "\e[1;5D" backward-word
 bindkey "\e[1;5C" forward-word
 
 # Color prompt
-PROMPT='%F{green}%n>%B%2/ %b%# %F{grey} '
+PROMPT='%F{green}%n>%B%2/ %b%# %F{grey}'
 
 # coloring
 # ls coloring
