@@ -1,0 +1,34 @@
+#### Github
+Host github-*
+    HostName github.com
+    User git
+    AddKeysToAgent yes
+    UseKeychain yes
+
+Host github-company
+    IdentityFile ~/.ssh/private_key
+
+Host github-private
+    IdentityFile ~/.ssh/private_key_moon
+
+#### AWS - using ssm
+Host aws-*
+    ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
+
+Host aws-dev-noti*
+    IdentityFile ~/.ssh/some-key.pem
+
+Host aws-dev-noti 
+    HostName i-somePrivateId1
+    User ec2-user
+
+Host aws-dev-noti-ubuntu
+    HostName i-somePrivateId2
+    User ubuntu
+
+# forward localhost 3307 to remote RDS @3306 (in private VPC)
+# run `ssh -vN aws-dev-noti-aurora-tunnel` then connect mysql to localhost:3307
+Host aws-dev-noti-aurora-tunnel
+    HostName i-somePrivateId1
+    User ec2-user
+    LocalForward 3307 private-endpoint-to-aurora:3306

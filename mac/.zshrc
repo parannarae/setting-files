@@ -27,8 +27,8 @@ PROMPT='%F{green}%n>%B%2/ %b%# %F{grey}'
 # coloring
 # ls coloring
 export CLICOLOR=1 #enables coloring of the terminal
-#export LSCOLORS=ExFxCxDxBxegedabagacad
-export LSCOLORS=GxFxCxDxBxegedabagaced
+export LSCOLORS=ExFxCxDxBxegedabagacad
+# export LSCOLORS=GxFxCxDxBxegedabagaced
 
 #alias ls='ls --color=auto'
 #alias dir='dir --color=auto'
