@@ -27,12 +27,12 @@ PROMPT='%F{green}%n>%B%2/ %b%# %F{grey}'
 # coloring
 # ls coloring
 export CLICOLOR=1 #enables coloring of the terminal
-export LSCOLORS=ExFxCxDxBxegedabagacad
-# export LSCOLORS=GxFxCxDxBxegedabagaced
+# export LSCOLORS=ExFxCxDxBxegedabagacad
+export LSCOLORS=GxFxCxDxBxegedabagaced
 
-#alias ls='ls --color=auto'
-#alias dir='dir --color=auto'
-#alias vdir='vdir --color=auto'
+# alias ls='ls --color=auto'
+# alias dir='dir --color=auto'
+# alias vdir='vdir --color=auto'
 
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
@@ -51,7 +51,7 @@ alias cp='cp -i'
 alias mv='mv -i'
 
 # Set Git language to English
-alias git='LC_ALL=en_US.UTF-8 git'
+# alias git='LC_ALL=en_US.UTF-8 git'
 
 # Add coloring to less for better man page
 export LESS_TERMCAP_mb=$(printf '\e[01;31m') # enter blinking mode - red
@@ -61,3 +61,4 @@ export LESS_TERMCAP_se=$(printf '\e[0m') # leave standout mode
 export LESS_TERMCAP_so=$(printf '\e[01;33m') # enter standout mode - yellow
 export LESS_TERMCAP_ue=$(printf '\e[0m') # leave underline mode
 export LESS_TERMCAP_us=$(printf '\e[04;36m') # enter underline mode - cyan
+
