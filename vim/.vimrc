@@ -17,7 +17,9 @@ set hls "highlight search
 "colorscheme solarized
 
 "colorscheme zenburn
-colorscheme Tomorrow-Night-Eighties
+"colorscheme Tomorrow-Night-Eighties
+"onedark theme ref: https://github.com/joshdick/onedark.vim
+colorscheme onedark
 
 set sol "start of the line
 set ru "cursor
