@@ -17,7 +17,7 @@ setopt HIST_VERIFY
 # to root
 autoload -Uz compinit && compinit
 
-# token movement in iterm
+# portable token movement keybinding in terminal emulators (e.g. iTerm2, Ghostty)
 bindkey "\e[1;5D" backward-word
 bindkey "\e[1;5C" forward-word
 
