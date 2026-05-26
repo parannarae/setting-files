@@ -19,7 +19,15 @@ set hls "highlight search
 "colorscheme zenburn
 "colorscheme Tomorrow-Night-Eighties
 "onedark theme ref: https://github.com/joshdick/onedark.vim
-colorscheme onedark
+"colorscheme onedark
+
+"ayu color theme
+"set termguicolors
+"let ayucolor="light"
+"colorscheme ayu
+
+"catppuccin
+colorscheme catppuccin_latte
 
 set sol "start of the line
 set ru "cursor
