@@ -11,10 +11,16 @@
 ## Code Structure
 - Use descriptive function and variable names. Avoid abbreviations or shortened words unless the full name would exceed 20 characters including underscores, or the shortened form is very common, even among non-English speakers.
 - If a function contains more than three logical blocks, modularize it by extracting private functions with well-formatted names so the internal flow can be understood without reading the contents of those private functions.
-- Do not extract a private function for simple boilerplate or configuration code, such as parsing or data validation, unless more than two logical blocks can be grouped into a single function, or a logical block exceeds 10 lines due to if/else statements or exception handling.
+- Do not extract a private function for simple boilerplate or configuration code, such as parsing or data validation, unless more than two logical blocks can be grouped into a single function, a logical block exceeds 10 lines due to if/else statements or exception handling, or the logic is used in more than one place.
 - Do not create a private function if doing so would make the code much more complex, for example, by requiring too many variables to be passed or multiple values to be returned.
 - Avoid writing code with more than four levels of block depth, where block depth refers to additional indentation introduced by structures such as curly-brace blocks.
 - Function order should follow the C style, where a private helper function is placed before the function that calls it. The goal is to narrow the reviewer’s scope when reading code from top to bottom, so they already have the helper function’s context before reading its caller.
+- Keep these principles from the Zen of Python in mind
+  - Explicit is better than implicit.
+  - Simple is better than complex.
+  - Readability counts.
+  - Errors should never pass silently, unless explicitly silenced.
+  - If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea.
 
 ## Modifying Existing Code
 - Keep the scope of changes as narrow as possible when modifying existing code, unless the prompt explicitly asks you to refactor other parts. Do not make large changes in a single pull request, as this can make the reviewer’s context harder to follow.
