@@ -8,6 +8,10 @@
 - For private functions, always write a one- to three-line summary doc unless the body is very short or the function name already makes the behavior clear. Do not write full documentation as you would for a public function.
 - For an attribute or function argument that contains a nested object or JSON, add an inline comment with an example showing the expected structure.
 
+## Code Formatting
+- Always run the linter, if one is available, after making code changes.
+- Remove trailing whitespace and ensure that each file ends with a newline. Apply these formatting changes only to files you have modified, not to the entire project.
+
 ## Code Structure
 - Use descriptive function and variable names. Avoid abbreviations or shortened words unless the full name would exceed 20 characters including underscores, or the shortened form is very common, even among non-English speakers.
 - If a function contains more than three logical blocks, modularize it by extracting private functions with well-formatted names so the internal flow can be understood without reading the contents of those private functions.
