@@ -34,4 +34,5 @@
 - Always create unit tests for all public functions.
 - Skip unit tests for branches that only handle simple boilerplate, such as null checks.
 - When writing tests for an exception-handling branch, do not assert on the exception message. Only check that the correct type of exception is raised.
+- When creating a mock, do not define implicit default return values. Always specify mocked return values explicitly in the test body so that the scenario’s assumptions and expectations are clear to reviewers. If the same return value is used across multiple test cases, such as when a mocked intermediate step must return a fixed value to test subsequent logic, define it in a fixture or helper function for reuse.
 
