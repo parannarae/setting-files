@@ -29,6 +29,14 @@
 ## Modifying Existing Code
 - Keep the scope of changes as narrow as possible when modifying existing code, unless the prompt explicitly asks you to refactor other parts. Do not make large changes in a single pull request, as this can make the reviewer's context harder to follow.
 
+## Exceptions and Logs
+- Define custom exceptions under a custom root exception. Each custom exception should accept a message argument for error details and an optional cause argument containing the exception that caused the current one. The custom root exception is useful for catching all expected application exceptions while allowing unexpected exceptions from libraries, the OS, and other external sources to bubble up.
+- Use the following logging levels:
+  - `info`: For non-warning and non-error logs. Keep `info` logs as sparse as possible, and use them only when they are strictly necessary for production debugging.
+  - `warning`: For unexpected behavior that occurred, but the process can continue by recovering from or skipping the issue.
+  - `error`: For unexpected behavior that occurred and requires the process to halt or exit immediately.
+- For non-`info` logs, do not log and raise an exception at the same time. Handling bubbled-up exceptions is the responsibility of the outer function, which can inspect the exception’s message or cause attributes to understand the error.
+
 ## Tests
 - Always create unit tests for all public functions.
 - Skip unit tests for branches that only handle simple boilerplate, such as null checks.
