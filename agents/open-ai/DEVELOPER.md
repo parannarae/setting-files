@@ -1,96 +1,101 @@
 # ~/.codex/DEVELOPER.md
 
 ## Docs
-- All documentation must be well formatted, for example, by following language-specific conventions, and easy for humans to read.
-- Always document public functions.
-- Always document all public attributes of a data structure, such as a struct or data class.
-- Leave comments on code blocks that represent a single logical idea, unless the block is simple setup, boilerplate, or error handling.
-- For private functions, always write a one- to three-line summary doc unless the body is very short or the function name already makes the behavior clear. Do not write full documentation as you would for a public function.
-- For an attribute or function argument that contains a nested object or JSON, add an inline comment with an example showing the expected structure.
+
+- All documentation must be well formatted, follow applicable language or ecosystem conventions, and be easy for humans to read.
+- Document public functions, exported types, and public data attributes.
+- For private functions, add a short summary when the name alone does not make the responsibility clear. Do not add ceremonial documentation to obvious one-line helpers or accessors.
+- For nested objects or structured data, include a concise shape example when it removes real ambiguity.
+- Comment non-obvious decisions, invariants, safety boundaries, and intentional trade-offs. Do not comment syntax that already explains itself.
+- A defensive branch comment should explain why it exists and what it protects.
+- Write product and frontend documents in terms of observable behavior and API contracts. Do not expose internal class, scheduler, or deployment details unless the document is explicitly an operations or design document.
 
 ## Code Formatting
-- Always run the linter, if one is available, after making code changes.
-- Remove trailing whitespace and ensure that each file ends with a newline. Apply these formatting changes only to files you have modified, not to the entire project.
+
+- Always run the available formatter and linter after making code changes.
+- Remove trailing whitespace and ensure modified text files end with a newline. Apply formatting changes only to files intentionally modified by the work.
+- When the repository has no established package manager, test runner, or linter, choose widely adopted, low-friction tooling for the language and record the choice. Do not introduce unrelated tooling churn.
 
 ## Code Structure
-- Use descriptive function and variable names. Avoid abbreviations or shortened words unless the full name would exceed 20 characters including underscores, or the shortened form is very common, even among non-English speakers.
-- If a function contains more than three logical blocks, modularize it by extracting private functions with well-formatted names so the internal flow can be understood without reading the contents of those private functions.
-- Do not extract a private function for simple boilerplate or configuration code, such as parsing or data validation, unless more than two logical blocks can be grouped into a single function, a logical block exceeds 10 lines due to if/else statements or exception handling, or the logic is used in more than one place.
-- Do not create a private function if doing so would make the code much more complex, for example, by requiring too many variables to be passed or multiple values to be returned.
-- Avoid writing code with more than four levels of block depth, where block depth refers to additional indentation introduced by structures such as curly-brace blocks.
-- Function order should follow the C style, where a private helper function is placed before the function that calls it. The goal is to narrow the reviewer's scope when reading code from top to bottom, so they already have the helper's context before reading its caller.
-- Keep these principles from the Zen of Python in mind
-  - Explicit is better than implicit.
-  - Simple is better than complex.
-  - Readability counts.
-  - Errors should never pass silently, unless explicitly silenced.
-  - If the implementation is hard to explain, it's a bad idea. If the implementation is easy to explain, it may be a good idea.
+
+- Use descriptive names. Avoid unexplained abbreviations unless they are common to the language, domain, or team.
+- Make public entry points readable from top to bottom. The main sequence should show preparation, dependency calls, transformation, and output construction.
+- Treat function length, logical-block count, and nesting depth as readability signals. Extract a helper when it names a meaningful operation, is reused, or makes its caller easier to understand.
+- Do not extract trivial boilerplate solely to reduce line count. Reject a helper when its parameters, returned values, or control flow are harder to understand than the code it replaces.
+- Follow existing repository ordering conventions. When none exists, organize functions so the reader can understand a helper before its caller.
+- Keep control flow shallow with guards, explicit failure paths, or meaningful helpers.
+- Prefer explicit behavior over implicit convenience. Preserve the distinction between missing, malformed, empty, and valid falsy values.
+- Do not silently choose between an injected dependency and a newly constructed dependency. Construction belongs in an explicit factory, bootstrap path, or composition root; injection is explicit when a caller supplies a dependency.
+- Do not use convenience fallback expressions when they hide whether a value is absent, invalid, injected, or defaulted. Write the branch or validation that makes the intended choice visible.
+- Keep transport adapters focused on request parsing, authentication context, response construction, and transport-level errors.
+- Keep application services focused on use-case flow, business decisions, state transitions, and coordination between dependencies.
+- Keep repositories focused on persistence primitives and clear query intent. Do not hide service workflow decisions in repository methods when general create, get, list, update, delete, and query criteria express the operation.
+- Keep mappers focused on conversion. Do not place dependency calls, use-case-specific defaults, timestamps, or ID policy in a mapper.
+- Share an implementation only when several cases have a stable, meaningful common flow and differ at a small explicit hook. Keep that common flow in the shared abstraction and make each variation provide only its actual behavior.
+- Do not introduce a base class or generic abstraction for hypothetical reuse.
 
 ## Modifying Existing Code
-- Keep the scope of changes as narrow as possible when modifying existing code, unless the prompt explicitly asks you to refactor other parts. Do not make large changes in a single pull request, as this can make the reviewer's context harder to follow.
+
+- Keep the scope of changes as narrow as possible unless the request explicitly asks for a broader refactor. Do not make large unrelated changes in a single pull request because they make review context harder to follow.
 
 ## Exceptions and Logs
-- Define custom exceptions under a custom root exception. Each custom exception should accept a message argument for error details and an optional cause argument containing the exception that caused the current one. The custom root exception is useful for catching all expected application exceptions while allowing unexpected exceptions from libraries, the OS, and other external sources to bubble up.
-- Use the following logging levels:
-  - `info`: For non-warning and non-error logs. Keep `info` logs as sparse as possible, and use them only when they are strictly necessary for production debugging.
-  - `warning`: For unexpected behavior that occurred, but the process can continue by recovering from or skipping the issue.
-  - `error`: For unexpected behavior that occurred and requires the process to halt or exit immediately.
-- For non-`info` logs, do not log and raise an exception at the same time. Handling bubbled-up exceptions is the responsibility of the outer function, which can inspect the exception’s message or cause attributes to understand the error.
+
+- Define expected application errors under a stable application-level error family when the language and architecture support it. Preserve the causal error where supported.
+- Use specific error types for expected validation, domain, and dependency failures. Avoid broad catches that convert programming or infrastructure failures into a misleading success.
+- Use `info` sparingly for necessary operational context, `warning` for an unexpected condition from which the operation can recover or skip, and `error` for a failure that requires the operation or process to stop.
+- Do not log and rethrow the same failure at every layer. Log at the layer that owns the recovery or reporting decision.
+- Errors must not pass silently unless intentionally ignored behavior is safe, explicit, and documented.
 
 ## Tests
-- Always create unit tests for all public functions.
-- Skip unit tests for branches that only handle simple boilerplate, such as null checks.
-- When writing tests for an exception-handling branch, do not assert on the exception message. Only check that the correct type of exception is raised.
-- When creating a mock, do not define implicit default return values. Always specify mocked return values explicitly in the test body so that the scenario's assumptions and expectations are clear to reviewers. If the same return value is used across multiple test cases, such as when a mocked intermediate step must return a fixed value to test subsequent logic, define it in a fixture or helper function for reuse.
-- When a single test class or file contains tests for multiple functions, use clearly visible ASCII-only comment dividers to group tests by the function under test. For example: `# --- MyClass.functionName ---.`
-- Order test scenarios according to the flow of the logic under test so that reviewers can easily identify any missing branches.
+
+- Test every changed public behavior. Test private helpers directly only when their meaningful logic is not covered through a public behavior.
+- Skip tests only for truly trivial boilerplate branches. Test a small branch when it changes a contract, avoids side effects, protects a state transition, or handles meaningful malformed input.
+- Assert error type and structured fields by default. Assert message text only when that wording is an intentional contract.
+- Set mock return values and side effects explicitly. Do not rely on implicit mock defaults to make a scenario pass.
+- When tests in a file cover multiple methods, use visible ASCII-only dividers: `# --- TypeName.method_name ---`.
+- Order tests along the behavior flow: normal case, boundary case, validation failure, fallback or malformed input, and empty result where relevant.
+- Name tests after the concrete condition and expected behavior. Prefer `rejects_datetime_without_timezone` to a vague term such as `naive`.
+- Keep test files aligned with the responsibility being tested. Business-rule tests belong with the business module; scheduler, lifecycle, mapper, and configuration tests belong with their respective modules.
+- Factories and fixtures construct data; each test visibly selects the scenario and dependency result that make the expectation meaningful.
+- Use a short comment for a non-obvious test input or call-order side effect. Explain the scenario or invariant, not the syntax of the test.
+- Do not add test-only switches, alternate runtime paths, sleeps, or production hooks to make tests easier. Use mocks, patches, fakes, or integration environments instead.
 
 ## General Programming Quality
 
 Treat these principles as priorities when making trade-offs:
 
-- **Make the code flow readable before making it concise.** A reviewer should be able to understand the main behavior by reading the public entry point from top to bottom. Do not hide the sequence of preparation, dependency invocation, transformation, and response construction behind clever indirection.
-- **Choose explicitness over implicit convenience.** Make state transitions, defaults, field mappings, fallback order, and error ownership visible in the code. A few intentional lines are preferable to a compact expression whose meaning depends on unstated assumptions.
-- **Use abstractions to clarify responsibilities, not merely to remove duplication.** Extract a helper only when it names a meaningful idea, prevents real behavioral drift, or makes the caller easier to read. Reject an abstraction when its parameters or return values make the overall flow harder to follow.
-- **Keep similar behavior structurally similar.** When two operations differ only by data mapping or configuration, share the common flow and isolate the actual differences. Do not force unrelated types through one generic helper merely because their method names look alike.
-- **Treat edge cases as part of the design.** Decide how missing, empty, malformed, and valid-but-falsy values behave before implementing the happy path. Encode that decision in a small, obvious branch and test the branch when it carries meaningful behavior.
-- **Optimize for the next reviewer.** Prefer names, data structures, comments, tests, and module boundaries that explain why the code works without requiring the reviewer to reconstruct hidden context.
+- **Make the code flow readable before making it concise.** A reviewer should understand the main behavior by reading the public entry point from top to bottom.
+- **Choose explicitness over implicit convenience.** Make state transitions, defaults, field mappings, fallback order, and error ownership visible.
+- **Use abstractions to clarify responsibilities, not merely to remove duplication.** Reject an abstraction when its parameters or return values make the overall flow harder to follow.
+- **Keep similar behavior structurally similar.** Share a meaningful common flow and isolate real variations. Do not force unrelated types through one generic helper merely because their method names look alike.
+- **Treat edge cases as part of the design.** Decide how missing, empty, malformed, and valid-but-falsy values behave before implementing the happy path.
+- **Optimize for the next reviewer.** Prefer names, module boundaries, data structures, comments, and tests that explain why the code works without hidden context.
 
 ### Contracts And Public Boundaries
 
-- Treat inputs, outputs, errors, and side effects as part of the contract. Decide and document what omitted, null, empty, invalid, and valid-but-falsy values mean when those states differ.
-- Validate user input at the boundary closest to the public interface. Invalid requests should fail before business logic or external work begins.
-- Document public functions, classes, and data attributes. For structured inputs or nested data, include a concise example where it makes the expected shape easier to understand.
+- Treat inputs, outputs, errors, side effects, and omitted values as contracts.
+- A function whose name promises a required result or completed operation must either fulfill that promise or signal failure with a specific error. Do not return an ambiguous boolean or absent value to represent a missing object, a business-rule rejection, or a dependency failure.
+- When absence is an expected outcome, make that optionality clear in the function name using the language or repository convention, such as `find`, `lookup_optional`, or `get_or_none`.
+- Give one behavior one canonical application-level configuration name. Perform deployment-specific naming transforms at the deployment boundary instead of teaching application code multiple deployment aliases by default.
+- Use separate configuration values for different trust boundaries or consumers, such as an internal service endpoint and a public browser endpoint.
+- Required production endpoints, credentials, paths, and identifiers should fail fast with an actionable configuration error. Do not silently guess a production-safe value.
 
 ### Code Flow And Abstraction
 
-- Organize public methods so their primary sequence is visible at a glance: validate or prepare input, build the operation, call a dependency, transform the result, and construct the output.
-- Extract a helper when it represents a meaningful logical unit, is reused, or makes the caller difficult to read. Do not extract trivial code merely to reduce line count.
-- Prefer helper parameters that explicitly describe the required data. Do not pass unrelated object types into one helper just because they happen to share a few attributes.
-- Avoid helpers whose argument list or return value is harder to understand than the original code. Use a small named data structure when related values must travel together.
-- Keep parsing, validation, transformation, and orchestration responsibilities separate when combining them would make error ownership ambiguous.
-- Prefer one shared implementation for one piece of domain behavior. Avoid duplicating parsing or mapping rules in multiple layers and allowing them to drift.
-
-### Values And Error Semantics
-
-- Distinguish a missing value from a value that is present but malformed. Use an exception, result type, or other explicit mechanism when the caller must make different decisions for those cases.
-- Preserve valid falsy values such as `0` and `False`. Use explicit missingness checks instead of convenience truthiness checks when falsy values may be meaningful.
-- Use specific exception types for expected domain failures. Catch exceptions narrowly at the layer that can make the correct decision.
-- Do not catch broad exception types to turn unrelated programming errors or infrastructure failures into apparently successful results.
-- Keep client-input failures, domain failures, malformed external data, and dependency failures distinguishable. They often require different status codes, logs, retries, or fallback behavior.
-- Comments on defensive branches should state why the branch exists and whether normal validation makes it unreachable. Do not present an unusual bypass or corrupted-data path as ordinary control flow.
+- Keep parsing, validation, transformation, orchestration, and external I/O separate when combining them would hide error ownership or behavior.
+- Prefer a small named data type over several loosely related parameters or a positional multi-value return when those values travel together.
 
 ### Dependency Boundaries
 
-- Model external request and response shapes deliberately. Verify uncertain behavior with authoritative documentation or an integration environment instead of relying on assumptions from a mock.
-- Unit tests should verify what the application sends to and receives from a dependency. They should not claim to verify the dependency's own query semantics unless the dependency is actually exercised.
+- Model external request and response shapes deliberately. Verify uncertain dependency behavior through authoritative documentation or an integration environment rather than relying solely on mocks.
+- Assert request construction when request construction is the behavior under test. Do not claim that a unit test proves a dependency's own semantics.
 
 ### Tests That Explain Behavior
 
-- Add tests for every changed public behavior. Test private helpers only when they contain meaningful logic not covered through the public interface.
-- Organize tests by the source responsibility they protect. Keep contract or schema validation tests separate from parser/helper tests and service tests when those responsibilities differ.
-- Order scenarios along the logic flow: normal behavior, boundaries, validation failures, fallback behavior, malformed data, and empty or short results.
-- Use explicit dependency return values in each test or in a clearly named fixture intended for deliberate reuse. Never hide the scenario behind an implicit default return value on a reusable mock.
-- Make fixtures and factories construct data; let each test choose the scenario. A test should visibly state whether it represents an empty result, a complete page, a malformed item, a missing field, or a particular cursor.
-- Assert request construction when request construction is the behavior under test. Do not assert incidental mock details or reproduce a dependency's internal behavior in a unit test.
-- Use short comments to explain why a non-obvious input matters. Comments should describe the scenario or invariant, not restate the test code.
+- Integration scripts should create isolated run directories and clean up temporary ports, processes, and test data when practical.
+
+## Deployment And Operational Scripts
+
+- Treat deployment and integration scripts as production-adjacent code. Use strict error handling, command checks, bounded waits, clear target context, and readable evidence of results.
+- Guard local-only actions with an exact local context or explicit opt-in. Keep checks that are safe only in local environments separate from remote-safe checks.
+- Use the project-managed runtime for scripts when available instead of assuming the host interpreter matches project requirements.
