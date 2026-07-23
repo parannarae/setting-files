@@ -1,0 +1,4 @@
+interface:
+  display_name: "Local PR Loop"
+  short_description: "Run isolated local PR loops with latest Markdown reports."
+  default_prompt: "Use $local-pr-loop as the requested owner or reviewer, create a uniquely identified loop under the target repository's .local/reviews directory, keep canonical state and immutable history in JSON, guard source snapshots, generate Markdown only for the latest event, and enforce role-specific deadlines until LGTM."
