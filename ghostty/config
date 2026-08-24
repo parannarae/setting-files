@@ -50,7 +50,8 @@
 # # Just for example:
 # resize-overlay-duration = 4s 200ms
 
-theme = Catppuccin Latte 
+# theme = Catppuccin Latte
+theme = Ayu Light
 
 # Start new shell from home directory
 window-inherit-working-directory = false

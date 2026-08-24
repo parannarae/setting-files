@@ -22,12 +22,12 @@ set hls "highlight search
 "colorscheme onedark
 
 "ayu color theme
-"set termguicolors
-"let ayucolor="light"
-"colorscheme ayu
+set termguicolors
+let ayucolor="light"
+colorscheme ayu
 
 "catppuccin
-colorscheme catppuccin_latte
+"colorscheme catppuccin_latte
 
 set sol "start of the line
 set ru "cursor
